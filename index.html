@@ -28,12 +28,17 @@
   .brand b{font-weight:700;letter-spacing:.16em;font-size:14px}
   .nav-links{display:flex;align-items:center;gap:32px;font-size:14px;font-weight:500;color:var(--ink-2)}
   .nav-links a{cursor:pointer}
-  .nav-links a:hover,.nav-links a.on{color:var(--cobalt)}
+  .nav-links a:not(.btn):hover,.nav-links a:not(.btn).on{color:var(--cobalt)}
   .btn{display:inline-block;background:var(--cobalt);color:#fff;font-weight:600;font-size:14px;padding:11px 20px;border-radius:8px;transition:.15s;cursor:pointer;border:none}
-  .btn:hover{background:var(--cobalt-dk)}
+  .btn:hover,.btn:focus-visible{background:var(--cobalt-dk);color:#fff}
   .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-  .btn-ghost:hover{border-color:var(--cobalt);color:var(--cobalt)}
-  @media(max-width:820px){.nav-links a:not(.btn){display:none}}
+  .btn-ghost:hover,.btn-ghost:focus-visible{background:var(--bone-2);border-color:var(--cobalt);color:var(--cobalt)}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--cobalt);outline-offset:4px}
+  .menu-toggle{display:none;background:var(--bone);color:var(--ink);border:1px solid var(--ink);border-radius:8px;padding:10px 14px;font:600 14px var(--font);min-height:44px}
+  .nav-links a{min-height:44px;display:inline-flex;align-items:center}
+  .skip-link{position:fixed;left:16px;top:-100px;z-index:100;background:var(--ink);color:white;padding:12px}.skip-link:focus{top:10px}
+  fieldset.fg{min-width:0;border:0;padding:0}fieldset.fg legend{font-size:13px;font-weight:600;margin-bottom:8px}
+  @media(max-width:820px){.nav-in{height:auto;min-height:70px;flex-wrap:wrap;gap:12px;padding-top:12px;padding-bottom:12px}.brand b{font-size:12px;letter-spacing:.1em}.nav-links{width:100%;flex-direction:column;align-items:stretch;gap:4px;padding:8px 0}.nav-links a{padding:12px}nav[data-enhanced] .menu-toggle{display:block}nav[data-enhanced] .nav-links{display:none}nav[data-enhanced] .nav-links.is-open{display:flex}}
 
   .view{display:none}
   .view.active{display:block;animation:fade .35s ease}
@@ -207,80 +212,27 @@
 
 </style>
 <style>
-/* ===== Formulated Haus — opening intro (portal dive), namespaced ===== */
-#fh-intro{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:99999;background:#F5EFE3;overflow:hidden}
-#fh-intro.fhi-hidden{display:none}
-#fh-intro.fhi-diving{pointer-events:none}
-#fh-intro .fhi-scene{position:absolute;inset:0;display:grid;place-items:center}
-#fh-intro .fhi-mark{width:212px;height:212px;position:relative;transition:transform .9s cubic-bezier(.3,.6,.2,1),filter .9s ease}
-#fh-intro .fhi-mark svg{display:block;width:100%;height:100%}
-#fh-intro .part{transform-box:fill-box;transform-origin:center;opacity:0}
-#fh-intro .p-glow{transform-box:fill-box;transform-origin:center;opacity:0}
-#fh-intro .p-ring{transform-box:fill-box;transform-origin:center;stroke-dasharray:113.1;stroke-dashoffset:113.1}
-#fhi-stage::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(38,35,31,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(38,35,31,.12) 1px,transparent 1px);background-size:60px 60px;opacity:.45;-webkit-mask-image:radial-gradient(ellipse 58% 55% at 50% 50%,#000 22%,transparent 70%);mask-image:radial-gradient(ellipse 58% 55% at 50% 50%,#000 22%,transparent 70%)}
-@keyframes fhi-veilup{0%{opacity:1}100%{opacity:0}}
-@keyframes fhi-seedpulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}28%{opacity:.95;transform:translate(-50%,-50%) scale(1.15)}60%{opacity:.45;transform:translate(-50%,-50%) scale(.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(.5)}}
-@keyframes fhi-drop{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:none}}
-@keyframes fhi-rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-@keyframes fhi-growx{from{opacity:0;transform:scaleX(.1)}to{opacity:1;transform:none}}
-@keyframes fhi-draw{to{stroke-dashoffset:0}}
-@keyframes fhi-chargeGlow{0%{opacity:0;transform:scale(.7)}16%{opacity:.5;transform:scale(1.5)}24%{opacity:0;transform:scale(1.75)}42%{opacity:.62;transform:scale(1.55)}49%{opacity:0;transform:scale(1.8)}64%{opacity:.75;transform:scale(1.6)}70%{opacity:0;transform:scale(1.85)}82%{opacity:.9;transform:scale(1.65)}87%{opacity:0;transform:scale(1.9)}95%{opacity:1;transform:scale(1.35)}100%{opacity:1;transform:scale(1.2)}}
-@keyframes fhi-diveout{0%{transform:scale(1.05);filter:blur(0);opacity:1}100%{transform:scale(2.9);filter:blur(9px);opacity:0}}
-@keyframes fhi-streakout{0%{opacity:0;transform:scale(.3) rotate(0deg)}30%{opacity:.9}100%{opacity:0;transform:scale(2.7) rotate(9deg)}}
-@keyframes fhi-flashpk{0%{opacity:0}42%{opacity:.9}100%{opacity:0}}
-@keyframes fhi-rimout{0%{opacity:.9;transform:translate(-50%,-50%) scale(.05)}100%{opacity:0;transform:translate(-50%,-50%) scale(5.5)}}
-@keyframes fhi-fade{to{opacity:0}}
-#fh-intro.fhi-play .p-roof{animation:fhi-drop .8s cubic-bezier(.25,.9,.3,1) .35s both}
-#fh-intro.fhi-play .p-plb{animation:fhi-rise .7s cubic-bezier(.25,.9,.3,1) .75s both}
-#fh-intro.fhi-play .p-prb{animation:fhi-rise .7s cubic-bezier(.25,.9,.3,1) 1.05s both}
-#fh-intro.fhi-play .p-plt{animation:fhi-rise .65s cubic-bezier(.25,.9,.3,1) 1.4s both}
-#fh-intro.fhi-play .p-prt{animation:fhi-rise .65s cubic-bezier(.25,.9,.3,1) 1.7s both}
-#fh-intro.fhi-play .p-bar{animation:fhi-growx .7s cubic-bezier(.25,.9,.3,1) 2.05s both}
-#fh-intro.fhi-play .p-ring{animation:fhi-draw 1.05s cubic-bezier(.3,.6,.2,1) 2.5s both}
-#fh-intro.fhi-built .p-ring{stroke-dashoffset:0}
-#fh-intro.fhi-charging .fhi-mark{transform:scale(1.05);filter:brightness(1.03)}
-#fh-intro.fhi-charging .p-glow{animation:fhi-chargeGlow 1.5s cubic-bezier(.4,0,.7,1) both}
-#fh-intro.fhi-diving .fhi-mark{transform:none}
-#fh-intro.fhi-diving #fhi-stage{animation:fhi-diveout .85s cubic-bezier(.55,0,.9,.25) both}
-#fh-intro.fhi-diving{animation:fhi-fade .7s ease .4s both}
-#fh-intro .fhi-seed{position:absolute;top:50%;left:50%;width:30px;height:30px;border-radius:50%;transform:translate(-50%,-50%) scale(.3);background:radial-gradient(circle,#2540D0,rgba(37,64,208,0) 70%);opacity:0;pointer-events:none}
-#fh-intro.fhi-play .fhi-seed{animation:fhi-seedpulse 1.5s ease both}
-#fh-intro .fhi-streaks{position:absolute;inset:-25%;pointer-events:none;opacity:0;transform:scale(.3);background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(37,64,208,0) 0deg,rgba(37,64,208,.30) .35deg,rgba(37,64,208,0) 1.5deg)}
-#fh-intro.fhi-diving .fhi-streaks{animation:fhi-streakout 1.05s ease-out both}
-#fh-intro .fhi-flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#eef2ff 0%,#2540D0 42%,rgba(37,64,208,0) 75%)}
-#fh-intro.fhi-diving .fhi-flash{animation:fhi-flashpk .8s ease both .18s}
-#fh-intro .fhi-rim{position:absolute;top:50%;left:50%;width:130px;height:130px;border-radius:50%;border:10px solid #2540D0;opacity:0;transform:translate(-50%,-50%) scale(.05);pointer-events:none;box-shadow:0 0 46px rgba(37,64,208,.6)}
-#fh-intro.fhi-diving .fhi-rim{animation:fhi-rimout 1s cubic-bezier(.5,0,.3,1) both .1s}
-#fh-intro .fhi-veil{position:absolute;inset:0;background:#26231F;pointer-events:none}
-#fh-intro.fhi-play .fhi-veil{animation:fhi-veilup .95s ease both}
-#fh-intro .fhi-skip{position:absolute;bottom:18px;right:18px;z-index:6;font:600 11px/1 Inter,-apple-system,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8A8377;background:rgba(245,239,227,.82);border:1px solid rgba(38,35,31,.14);border-radius:999px;padding:9px 15px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-#fh-intro .fhi-skip:hover{border-color:#2540D0;color:#2540D0}
-@media(prefers-reduced-motion:reduce){#fh-intro{display:none!important}}
+/* A short decorative mark animation; content is available immediately. */
+@keyframes mark-arrive{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+#navmark{animation:mark-arrive .6s ease-out both}
+@media(prefers-reduced-motion:reduce){#navmark,.view.active{animation:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
-<div id="fh-intro" aria-hidden="true">
-  <div class="fhi-scene" id="fhi-stage"><span class="fhi-mark"></span></div>
-  <div class="fhi-seed"></div>
-  <div class="fhi-streaks"></div>
-  <div class="fhi-flash"></div>
-  <div class="fhi-rim"></div>
-  <div class="fhi-veil"></div>
-  <button class="fhi-skip" type="button">Skip intro</button>
-</div>
-
-<nav><div class="wrap nav-in">
-  <div class="brand" data-view="home"><span id="navmark"></span><b>FORMULATED HAUS</b></div>
-  <div class="nav-links">
-    <a data-view="work">Work</a>
-    <a data-view="home" data-scroll="services">Services</a>
-    <a data-view="process">Process</a>
-    <a class="btn" data-view="project">Start a project</a>
+<nav aria-label="Main navigation"><div class="wrap nav-in">
+  <a class="brand" href="#home" data-view="home"><span id="navmark" aria-hidden="true"></span><b>FORMULATED HAUS</b></a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav-links">Menu</button>
+  <div class="nav-links" id="main-nav-links">
+    <a data-view="work" href="#work">Work</a>
+    <a data-view="home" data-scroll="services" href="#home">Services</a>
+    <a data-view="process" href="#process">Process</a>
+    <a class="btn" data-view="project" href="#project">Start a project</a>
   </div>
 </div></nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 
 <!-- ============ HOME ============ -->
 <section id="home" class="view active">
@@ -289,8 +241,8 @@
     <h1>Design for your customers. <em>Systems for your team.</em></h1>
     <p class="lede">Formulated Haus designs the website your customers see — and engineers the internal system your team runs on. One studio, from first pixel to daily operations.</p>
     <div class="hero-cta">
-      <a class="btn" data-view="project">Start a project</a>
-      <a class="btn btn-ghost" data-view="work">See the work</a>
+      <a class="btn" data-view="project" href="#project">Start a project</a>
+      <a class="btn btn-ghost" data-view="work" href="#work">See the work</a>
     </div>
     <div class="hero-meta">
       <div><b>3</b> brands built end to end</div>
@@ -319,9 +271,9 @@
       <p>The same proven system, reconfigured and re-skinned per client — a bespoke result without a bespoke price.</p>
     </div>
     <div class="grid-3">
-      <a class="work-card" data-view="work"><div class="thumb" style="background:linear-gradient(150deg,#1b1811,#2a2418)"><div class="bar"><i></i><i></i><i></i></div><div class="big" style="background:rgba(198,163,95,.55)"></div><div class="ln m"></div><div class="ln s"></div></div><div class="work-meta"><div class="t">Restaurant group · Web + Portal</div><h3>Kōna Sushi</h3><p>Website and staff portal, wired together. →</p></div></a>
-      <a class="work-card" data-view="work"><div class="thumb" style="background:linear-gradient(150deg,#06090d,#0e1a24)"><div class="bar"><i></i><i></i><i></i></div><div class="big" style="background:rgba(56,177,227,.5)"></div><div class="ln m"></div><div class="ln s"></div></div><div class="work-meta"><div class="t">Nordic spa · Our venture</div><h3>Immerse</h3><p>Fire-and-ice identity + wellness progression.</p></div></a>
-      <a class="work-card" data-view="work"><div class="thumb" style="background:linear-gradient(150deg,#e9e2d2,#d8ccae)"><div class="bar"><i style="background:rgba(38,35,31,.25)"></i><i style="background:rgba(38,35,31,.25)"></i><i style="background:rgba(38,35,31,.25)"></i></div><div class="big" style="background:rgba(90,110,66,.55)"></div><div class="ln m" style="background:rgba(38,35,31,.16)"></div><div class="ln s" style="background:rgba(38,35,31,.16)"></div></div><div class="work-meta"><div class="t">Countryside retreat · Our venture</div><h3>Elmstead Retreat</h3><p>Warm, light identity for an overnight retreat.</p></div></a>
+      <a class="work-card" data-view="work" href="#work"><div class="thumb" style="background:linear-gradient(150deg,#1b1811,#2a2418)"><div class="bar"><i></i><i></i><i></i></div><div class="big" style="background:rgba(198,163,95,.55)"></div><div class="ln m"></div><div class="ln s"></div></div><div class="work-meta"><div class="t">Restaurant group · Web + Portal</div><h3>Kōna Sushi</h3><p>Website and staff portal, wired together. →</p></div></a>
+      <a class="work-card" data-view="work" href="#work"><div class="thumb" style="background:linear-gradient(150deg,#06090d,#0e1a24)"><div class="bar"><i></i><i></i><i></i></div><div class="big" style="background:rgba(56,177,227,.5)"></div><div class="ln m"></div><div class="ln s"></div></div><div class="work-meta"><div class="t">Nordic spa · Our venture</div><h3>Immerse</h3><p>Fire-and-ice identity + wellness progression.</p></div></a>
+      <a class="work-card" data-view="work" href="#work"><div class="thumb" style="background:linear-gradient(150deg,#e9e2d2,#d8ccae)"><div class="bar"><i style="background:rgba(38,35,31,.25)"></i><i style="background:rgba(38,35,31,.25)"></i><i style="background:rgba(38,35,31,.25)"></i></div><div class="big" style="background:rgba(90,110,66,.55)"></div><div class="ln m" style="background:rgba(38,35,31,.16)"></div><div class="ln s" style="background:rgba(38,35,31,.16)"></div></div><div class="work-meta"><div class="t">Countryside retreat · Our venture</div><h3>Elmstead Retreat</h3><p>Warm, light identity for an overnight retreat.</p></div></a>
     </div>
   </div></section>
 
@@ -348,8 +300,7 @@
   </style>
   <section class="blk" style="padding-top:0"><div class="wrap">
     <div class="sec-head"><span class="eyebrow">Who's behind it</span><h2>Built by an operator, not an agency.</h2></div>
-    <div class="grid-2" style="gap:52px;align-items:center">
-      <div class="fh-portrait">Your photo here — on the job, not a studio headshot</div>
+    <div style="max-width:780px">
       <div>
         <p class="lede" style="margin-top:0">I don't come at this from a software company. I help run a multi-location restaurant group, and I built these systems because I needed them — onboarding that new hires actually finish, evaluations that happen on time, training that doesn't live in a binder nobody opens.</p>
         <p style="color:var(--ink-2);font-size:15.5px;margin-top:16px;max-width:58ch">When they worked for us, other owners started asking. So Formulated Haus installs the same engine for owner-operated hospitality groups — websites out front, staff systems behind them. The tools on this site aren't demos. They run my own businesses first, then ship to yours.</p>
@@ -381,7 +332,7 @@
       <details><summary>Who owns my data and customer information?</summary><div class="fh-a">You do, always. We never take ownership of your domain, your Stripe, your customer lists, or your Google profile — those stay in your accounts. We're the builders and the caretakers, not the landlord.</div></details>
       <details><summary>Is this too complicated for my staff?</summary><div class="fh-a">It's built for hourly staff on their phones, not for head office. If a new hire can order food on an app, they can use the portal — sign in with a link, tap through onboarding, done. Managers get a simple dashboard, not a spreadsheet maze.</div></details>
       <details><summary>How long does it take?</summary><div class="fh-a">A marketing website is typically <b>2–3 weeks</b>. A staff portal runs <b>4–8 weeks</b> depending on how many locations, departments, and modules you need. A full brand + website + portal engagement is scoped up front, so you know the timeline before we start.</div></details>
-      <details><summary>What does it cost?</summary><div class="fh-a">Priced on what it replaces — manual onboarding, paper evals, turnover chaos — not by the hour. Rough starting points:<div class="fh-price"><div class="r"><span>Marketing website</span><b>from $3,500</b></div><div class="r"><span>Workspace portal</span><b>$4k–$7.5k</b></div><div class="r"><span>Standalone portal</span><b>$15k–$28k</b></div><div class="r"><span>Full ops suite</span><b>$25k–$45k+</b></div></div><p style="margin-top:14px">Most clients then stay on a care plan so it keeps improving. You get a fixed quote before any work begins.</p></div></details>
+      <details><summary>What does it cost?</summary><div class="fh-a">Priced on what it replaces — manual onboarding, paper evals, turnover chaos — not by the hour. Rough starting points:<div class="fh-price"><div class="r"><span>Marketing website</span><b>from $3,500</b></div><div class="r"><span>Workspace portal</span><b>$4k–$7.5k</b></div><div class="r"><span>Standalone portal</span><b>$15k–$28k</b></div><div class="r"><span>Full ops suite</span><b>$25k–$45k+</b></div></div><p style="margin-top:14px">Most clients then stay on a care plan so it keeps improving. You get a fixed quote before agreed production work begins. The initial bounded website concept is a separate review step.</p></div></details>
       <details><summary>What if we outgrow the first version?</summary><div class="fh-a">That's the design. You start with the core and add modules — training, inventory, events, jobs, sales &amp; labour — as you grow. Same engine, no rebuild. New locations and departments slot in the same way.</div></details>
     </div>
   </div></section>
@@ -390,7 +341,7 @@
     <span class="eyebrow">Let's build</span>
     <h2>Ready to run on something better?</h2>
     <p>Tell us about your business and where operations hurt. We'll show you what the front and back of house could look like — built as one.</p>
-    <a class="btn" data-view="project">Start a project</a>
+    <a class="btn" data-view="project" href="#project">Start a project</a>
   </div></div></section>
 </section>
 
@@ -484,7 +435,7 @@
       <span class="eyebrow">Your business next</span>
       <h2>Want this for your group?</h2>
       <p>Tell us your locations, roles, and where operations hurt — we'll scope it.</p>
-      <a class="btn" data-view="project">Start a project</a>
+      <a class="btn" data-view="project" href="#project">Start a project</a>
     </div>
   </div></section>
 </section>
@@ -495,14 +446,14 @@
     <div class="sec-head">
       <span class="eyebrow">How it works</span>
       <h2>Done-for-you, start to finish.</h2>
-      <p>A clear four-phase engagement. You stay in your business; we handle the build and hand you the keys.</p>
+      <p>For website projects, start with a private concept, review it with Jordan, then agree on what comes next. Other services are scoped separately.</p>
     </div>
 
     <div class="timeline">
-      <div class="ph"><div class="node">1</div><h3>Discover</h3><p>We map how your team actually works.</p><ul><li>Roles &amp; locations audit</li><li>Current tools &amp; pain points</li><li>Brand &amp; content review</li><li>Scope &amp; fixed quote</li></ul></div>
-      <div class="ph"><div class="node">2</div><h3>Build</h3><p>Site and portal, configured to you.</p><ul><li>Website design &amp; build</li><li>Portal configured from the engine</li><li>Your evaluations &amp; ladders</li><li>Brand, logo &amp; graphics</li></ul></div>
-      <div class="ph"><div class="node">3</div><h3>Handover</h3><p>Everything transferred to your ownership.</p><ul><li>Accounts in your name</li><li>Domain registered to you</li><li>Service-account transfer</li><li>Team training &amp; docs</li></ul></div>
-      <div class="ph"><div class="node">4</div><h3>Support</h3><p>Optional retainer as you grow.</p><ul><li>Updates &amp; new features</li><li>New locations &amp; roles</li><li>Seasonal campaigns</li><li>Priority response</li></ul></div>
+      <div class="ph"><div class="node">1</div><h3>Share your brief</h3><p>Tell us about your business and what your website needs to do.</p><ul><li>Your audience and goals</li><li>Brand direction and references</li><li>Essential features and constraints</li></ul></div>
+      <div class="ph"><div class="node">2</div><h3>Explore a concept</h3><p>Eligible website inquiries begin with a bounded private concept, before a production commitment.</p><ul><li>One initial visual direction</li><li>Draft copy and clear assumptions</li><li>No deposit required for this initial concept</li></ul></div>
+      <div class="ph"><div class="node">3</div><h3>Review with Jordan</h3><p>Discuss the concept with Jordan. Your feedback guides the next revision.</p><ul><li>Confirm what fits your business</li><li>Agree on the adjustments</li><li>Jordan coordinates the revision</li></ul></div>
+      <div class="ph"><div class="node">4</div><h3>Agree the next stage</h3><p>Production scope, pricing and release are separate decisions.</p><ul><li>Approve the production scope</li><li>Confirm ownership and handover</li><li>Choose support if you need it</li></ul></div>
     </div>
 
     <div class="sec-head" style="margin-top:72px;margin-bottom:20px">
@@ -521,8 +472,8 @@
     <div class="cta-box" style="margin-top:64px">
       <span class="eyebrow">Start</span>
       <h2>Let's scope your build.</h2>
-      <p>A five-minute inquiry tells us enough to come back with a plan and a quote.</p>
-      <a class="btn" data-view="project">Start a project</a>
+      <p>Share enough for us to assess a first website concept. Jordan will work through the direction and next steps with you.</p>
+      <a class="btn" data-view="project" href="#project">Start a project</a>
     </div>
   </div></section>
 </section>
@@ -533,25 +484,25 @@
     <div class="sec-head" style="text-align:center;margin:0 auto 40px">
       <span class="eyebrow">Start a project</span>
       <h2>Tell us about your business.</h2>
-      <p style="margin-left:auto;margin-right:auto">A few questions to scope the work. We'll come back within two business days with a plan and a fixed quote — no pressure, no obligation.</p>
+      <p style="margin-left:auto;margin-right:auto">Tell us what your website needs to achieve. Eligible website inquiries begin with a bounded private concept; you review it with Jordan before deciding on production work. Other services are scoped separately.</p>
     </div>
 
-    <form class="form-card" id="scopeForm" onsubmit="return submitScope(event)">
+    <form class="form-card" id="scopeForm" onsubmit="submitScope(event); return false;">
       <div class="two">
-        <div class="fg"><label>Your name <span class="req">*</span></label><input required name="name" placeholder="Jordan Nicholls"></div>
-        <div class="fg"><label>Business name <span class="req">*</span></label><input required name="business" placeholder="Kōna Sushi"></div>
+        <div class="fg"><label for="inquiry-name">Your name <span class="req">*</span></label><input required name="name" id="inquiry-name" maxlength="120" placeholder="Your name" autocomplete="name"></div>
+        <div class="fg"><label for="inquiry-business">Business name <span class="req">*</span></label><input required name="business" id="inquiry-business" maxlength="200" placeholder="Your business" autocomplete="organization"></div>
       </div>
       <div class="two">
-        <div class="fg"><label>Email <span class="req">*</span></label><input required type="email" name="email" placeholder="you@business.com"></div>
-        <div class="fg"><label>Business type</label>
-          <select name="type"><option>Restaurant / Bar / Café</option><option>Spa &amp; Wellness</option><option>Gym / Fitness studio</option><option>Salon / Barber</option><option>Trades / Home services</option><option>Retail / Storefront</option><option>Hotel / Lodging</option><option>Something else</option></select>
+        <div class="fg"><label for="inquiry-email">Email <span class="req">*</span></label><input required type="email" name="email" id="inquiry-email" maxlength="254" placeholder="you@business.com" autocomplete="email"></div>
+        <div class="fg"><label for="inquiry-type">Business type</label>
+          <select name="type" id="inquiry-type"><option>Restaurant / Bar / Café</option><option>Spa &amp; Wellness</option><option>Gym / Fitness studio</option><option>Salon / Barber</option><option>Trades / Home services</option><option>Retail / Storefront</option><option>Hotel / Lodging</option><option>Something else</option></select>
         </div>
       </div>
-      <div class="fg"><label>How many locations?</label>
-        <select name="locations"><option>1 location</option><option>2–3 locations</option><option>4–9 locations</option><option>10+ locations</option></select>
+      <div class="fg"><label for="inquiry-locations">How many locations?</label>
+        <select name="locations" id="inquiry-locations"><option>1 location</option><option>2–3 locations</option><option>4–9 locations</option><option>10+ locations</option></select>
       </div>
 
-      <div class="fg"><label>What do you need? <span class="hint">— select all that apply</span></label>
+      <fieldset class="fg"><legend>What do you need? <span class="hint">— select all that apply</span></legend>
         <div class="opts" id="needs">
           <label class="opt"><input type="checkbox" value="Website"> Website</label>
           <label class="opt"><input type="checkbox" value="Staff Portal / Operations"> Staff portal / operations system</label>
@@ -559,29 +510,41 @@
           <label class="opt"><input type="checkbox" value="Graphics"> Graphics &amp; marketing assets</label>
           <label class="opt"><input type="checkbox" value="Not sure"> Not sure yet — help me scope it</label>
         </div>
-      </div>
+      </fieldset>
 
-      <div class="fg"><label>Where does it hurt most right now? <span class="hint">— the problem you'd fix first</span></label>
-        <textarea name="pain" placeholder="e.g. onboarding new staff is chaotic across four locations, and our site can't take online orders…"></textarea>
+      <div class="fg"><label for="inquiry-pain">Where does it hurt most right now? <span class="hint">— the problem you'd fix first</span></label>
+        <textarea name="pain" id="inquiry-pain" maxlength="5000" placeholder="e.g. onboarding new staff is chaotic across four locations, and our site can't take online orders…"></textarea>
       </div>
 
       <div class="two">
-        <div class="fg"><label>Timeline</label>
-          <select name="timeline"><option>As soon as possible</option><option>1–3 months</option><option>3–6 months</option><option>Just exploring</option></select>
+        <div class="fg"><label for="inquiry-timeline">Timeline</label>
+          <select name="timeline" id="inquiry-timeline"><option>As soon as possible</option><option>1–3 months</option><option>3–6 months</option><option>Just exploring</option></select>
         </div>
-        <div class="fg"><label>Budget range <span class="hint">— optional</span></label>
-          <select name="budget"><option>Not sure yet</option><option>Under $5k</option><option>$5k–$15k</option><option>$15k–$40k</option><option>$40k+</option><option>Ongoing retainer</option></select>
+        <div class="fg"><label for="inquiry-budget">Budget range <span class="hint">— optional</span></label>
+          <select name="budget" id="inquiry-budget"><option>Not sure yet</option><option>Under $5k</option><option>$5k–$15k</option><option>$15k–$40k</option><option>$40k+</option><option>Ongoing retainer</option></select>
         </div>
       </div>
 
+      <!-- NATIVE_FIELDS_START -->
+      <fieldset id="nativeFields" hidden disabled>
+        <legend>Website concept details</legend>
+        <div class="fg"><label for="native-audience">Who is the website for?</label><textarea id="native-audience" name="audience" maxlength="500"></textarea></div>
+        <div class="fg"><label for="native-outcomes">Required outcomes — one per line (1–12)</label><textarea id="native-outcomes" name="requiredOutcomes" required maxlength="6011"></textarea></div>
+        <div class="fg"><label for="native-constraints">Additional constraints — up to 7 lines, 500 characters each</label><textarea id="native-constraints" name="constraints" maxlength="3506"></textarea></div>
+        <label><input type="checkbox" name="contactConsent" value="yes" required> I agree that Jordan may contact me about this inquiry.</label>
+      </fieldset>
+      <!-- NATIVE_FIELDS_END -->
+      <div hidden aria-hidden="true"><label>Leave this blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
       <button type="submit" class="btn" style="width:100%;padding:14px;font-size:15px;margin-top:6px">Send inquiry</button>
-      <p style="font-size:12px;color:var(--gray);text-align:center;margin-top:14px">Submissions route to your Google Workspace — a Google Sheet + an email to your inbox. Add your Apps Script URL to go live.</p>
+      <p id="inquiryStatus" role="status" aria-live="polite"></p>
+      <p style="font-size:12px;color:var(--gray);text-align:center;margin-top:14px">An inquiry is not a purchase commitment. Jordan coordinates concept review and revisions with you; timing and eligibility are confirmed separately.</p>
     </form>
 
     <div class="form-card thanks" id="thanks" style="display:none">
       <div class="chk">✓</div>
-      <h2>Thanks — got it.</h2>
-      <p>We'll review your inquiry and come back within two business days with a plan and a fixed quote.</p>
+      <h2 tabindex="-1" id="receiptHeading">Thanks — your inquiry is saved.</h2>
+      <p id="receiptDescription">We’ll assess your brief for an initial private website concept. Jordan will coordinate the review and your feedback. This receipt confirms your inquiry was saved; it does not confirm a build has started, a purchase or permission to publish.</p>
+      <p id="receiptReference"></p>
       <div class="summary" id="summary"></div>
     </div>
   </div></div></section>
@@ -591,10 +554,10 @@
 
 <footer><div class="wrap">
   <div class="foot-in">
-    <div class="brand" data-view="home"><span id="footmark"></span><b>FORMULATED HAUS</b></div>
+    <a class="brand" data-view="home" href="#home"><span id="footmark" aria-hidden="true"></span><b>FORMULATED HAUS</b></a>
     <div class="foot-links">
-      <a data-view="work">Work</a><a data-view="process">Process</a><a data-view="project">Start a project</a>
-      <a href="mailto:jordan@formulatedhaus.com">Contact</a>
+      <a data-view="work" href="#work">Work</a><a data-view="process" href="#process">Process</a><a data-view="project" href="#project">Start a project</a>
+      <a href="mailto:jordanjamesnicholls@gmail.com">Contact</a>
     </div>
   </div>
   <div class="copy">© 2026 Formulated Haus · Design &amp; systems for service businesses · Ontario, Canada · formulatedhaus.com</div>
@@ -612,10 +575,21 @@ function markSVG(ink, accent, size){
 document.getElementById('navmark').innerHTML  = markSVG('#26231F','#2540D0',30);
 document.getElementById('footmark').innerHTML = markSVG('#26231F','#2540D0',28);
 
+// ---- accessible mobile navigation ----
+const menuButton=document.querySelector('.menu-toggle');
+const menuLinks=document.getElementById('main-nav-links');
+const mainNav=menuButton.closest('nav');
+mainNav.setAttribute('data-enhanced','');
+function closeMenu(){menuLinks.classList.remove('is-open');menuButton.setAttribute('aria-expanded','false');}
+menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));menuLinks.classList.toggle('is-open',open);});
+mainNav.addEventListener('keydown',event=>{if(event.key==='Escape'&&menuButton.getAttribute('aria-expanded')==='true'){closeMenu();menuButton.focus();}});
 // ---- simple view router ----
 function showView(id, scrollTo){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  const v=document.getElementById(id); if(v) v.classList.add('active');
+  const v=document.getElementById(id); if(!v)return; v.classList.add('active');
+  closeMenu();
+  const target=document.getElementById(scrollTo||'')||v.querySelector('h1,h2')||v;
+  target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
   document.querySelectorAll('.nav-links a[data-view]').forEach(a=>a.classList.toggle('on',a.dataset.view===id && !a.classList.contains('btn')));
   if(scrollTo){const el=document.getElementById(scrollTo); if(el){el.scrollIntoView({behavior:'smooth'});return;}}
   window.scrollTo({top:0,behavior:'smooth'});
@@ -635,27 +609,85 @@ const kEvents=["Rooftop Rhythms — live music tonight, Tecumseh patio","Trivia 
 const kf=document.getElementById('kfeed'); let ki=0;
 if(kf){setInterval(function(){ki=(ki+1)%kEvents.length;kf.style.opacity=0;setTimeout(function(){kf.textContent=kEvents[ki];kf.style.opacity=1;},260);},2900);}
 
-// ---- survey submit → Google Workspace back end (Apps Script) ----
-// Paste your deployed Apps Script /exec URL here to go live. Empty = demo mode.
-const INQUIRY_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyd-tatgGsTdLI3z-hnmVXgzwRhI1m0LDf6KE8EX3qc9aRrcDuqVtE4PFk0i6EiC-7f/exec';
-function submitScope(e){
+// A receipt is shown only after the server confirms durable storage.
+let inquiryAttempt = null;
+const INQUIRY_RELEASE_MODE = 'legacy';
+/* NATIVE_BROWSER_IMPLEMENTATION */
+let nativeSubmit;
+async function submitNativeScope(f,button,status,data){
+  button.disabled=true;
+  button.textContent='Sending…';
+  status.textContent='Sending your inquiry…';
+  try{
+    const constraints=[
+      'Business type: '+(data.type||'Not specified'),
+      'Locations: '+(data.locations||'Not specified'),
+      'Requested services: '+(data.needs.length?data.needs.join('; '):'None selected'),
+      'Timeline: '+(data.timeline||'Not specified'),
+      'Budget range: '+(data.budget||'Not specified'),
+      ...(data.constraints||'').split(/\r?\n/).map(line=>line.trim()).filter(Boolean)
+    ];
+    if(constraints.length>12||constraints.some(line=>line.length>500)){
+      status.textContent='Please use at most 7 additional constraint lines, up to 500 characters each. Business type, locations, requested services, timeline and budget must each fit within 500 characters including their label. Nothing has been sent.';
+      return false;
+    }
+    if(!nativeSubmit)nativeSubmit=createNativeBrowserBranch({releaseEnabled:true,sendNative:body=>fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString(),signal:AbortSignal.timeout(25000)})});
+    const receipt=await nativeSubmit({name:data.name,email:data.email,projectName:data.business,objective:data.pain,audience:data.audience,requiredOutcomes:data.requiredOutcomes,constraints,contactConsent:data.contactConsent==='yes',website:data.website});
+    if(!receipt.ok){
+      status.textContent=(receipt.code==='INVALID_FORM'?'Please provide a valid email, a 20–4,000 character objective, 1–12 outcomes (up to 500 characters each), and explicit contact consent.':'We couldn’t confirm receipt. Keep your details here and retry, or contact Jordan.')+' '+(receipt.recoveryMessage||'');
+      return false;
+    }
+    document.getElementById('receiptHeading').textContent='Thanks — Netlify acknowledged your inquiry.';
+    document.getElementById('receiptDescription').textContent=receipt.message+' Jordan will coordinate review separately. This does not confirm a build has started or permission to publish.';
+    document.getElementById('receiptReference').textContent='Reference: '+receipt.requestId+'. '+receipt.recoveryMessage;
+    document.getElementById('summary').replaceChildren();
+    f.style.display='none';
+    document.getElementById('thanks').style.display='block';
+    document.getElementById('receiptHeading').focus();
+  }catch{status.textContent='We couldn’t confirm receipt. Keep this page open and retry, or contact Jordan.';}
+  finally{button.disabled=false;button.textContent='Send inquiry';}
+  return false;
+}
+async function submitScope(e){
   e.preventDefault();
   const f=e.target;
+  const button=f.querySelector('button[type="submit"]');
+  if(button.disabled) return false;
+  const status=document.getElementById('inquiryStatus');
   const needs=[...document.querySelectorAll('#needs input:checked')].map(c=>c.value);
-  // send to your Google Sheet + inbox (fire-and-forget; Apps Script has no CORS headers)
-  if(INQUIRY_ENDPOINT){
-    const fd=new FormData(f);
-    needs.forEach(n=>fd.append('needs',n));
-    fetch(INQUIRY_ENDPOINT,{method:'POST',mode:'no-cors',body:fd}).catch(function(){});
+  const data=Object.fromEntries(new FormData(f));
+  data.needs=needs;
+  if(INQUIRY_RELEASE_MODE==='native')return submitNativeScope(f,button,status,data);
+  const signature=JSON.stringify(data);
+  if(!inquiryAttempt || inquiryAttempt.signature!==signature) inquiryAttempt={signature,requestId:crypto.randomUUID()};
+  button.disabled=true;
+  button.textContent='Sending…';
+  status.textContent='Saving your inquiry…';
+  try {
+    const response=await fetch('/api/inquiry',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({...data,requestId:inquiryAttempt.requestId}),signal:AbortSignal.timeout(25000)
+    });
+    const receipt=await response.json();
+    if(!response.ok || receipt.ok!==true || receipt.requestId!==inquiryAttempt.requestId) throw new Error('Unconfirmed');
+    const rows=[['Business',data.business],['Type',data.type],['Locations',data.locations],
+      ['Needs',needs.length?needs.join(', '):'—'],['Timeline',data.timeline],['Budget',data.budget]];
+    const summary=document.getElementById('summary');
+    summary.replaceChildren();
+    rows.forEach(([label,value])=>{
+      const row=document.createElement('div'), key=document.createElement('span'), text=document.createElement('b');
+      key.textContent=label; text.textContent=value||'—'; row.append(key,text); summary.append(row);
+    });
+    document.getElementById('receiptReference').textContent='Reference: '+receipt.requestId;
+    f.style.display='none';
+    document.getElementById('thanks').style.display='block';
+    document.getElementById('receiptHeading').focus();
+  } catch {
+    status.textContent='We couldn’t confirm receipt. Your details are still here. Please retry, or contact jordanjamesnicholls@gmail.com. Retrying unchanged details will not create a second inquiry.';
+  } finally {
+    button.disabled=false;
+    button.textContent='Send inquiry';
   }
-  const rows=[
-    ['Business',f.business.value||'—'],['Type',f.type.value],['Locations',f.locations.value],
-    ['Needs',needs.length?needs.join(', '):'—'],['Timeline',f.timeline.value],['Budget',f.budget.value]
-  ];
-  document.getElementById('summary').innerHTML = rows.map(r=>`<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
-  f.style.display='none';
-  document.getElementById('thanks').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
   return false;
 }
 
@@ -685,38 +717,6 @@ function submitScope(e){
   },2400);
 })();
 </script>
-<script>
-/* Formulated Haus opening intro — plays once per session, dives into the site */
-(function(){
-  var intro=document.getElementById('fh-intro');
-  if(!intro) return;
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var seen=false; try{seen=sessionStorage.getItem('fhIntroSeen')==='1';}catch(e){}
-  var htmlEl=document.documentElement, bodyEl=document.body;
-  function finish(){ intro.classList.add('fhi-hidden'); htmlEl.style.overflow=''; bodyEl.style.overflow=''; try{sessionStorage.setItem('fhIntroSeen','1');}catch(e){} }
-  if(reduce||seen){ if(intro.parentNode) intro.parentNode.removeChild(intro); return; }
-  var svg='<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
-    '<circle class="p-glow" cx="120" cy="140" r="18" fill="none" stroke="#2540D0" stroke-width="8"/>'+
-    '<polygon class="p-roof part" points="120,48 188,88 52,88" fill="#26231F"/>'+
-    '<rect class="p-plt part" x="60" y="95" width="35" height="15" fill="#26231F"/>'+
-    '<rect class="p-plb part" x="60" y="113" width="35" height="72" fill="#26231F"/>'+
-    '<rect class="p-prt part" x="145" y="95" width="35" height="15" fill="#26231F"/>'+
-    '<rect class="p-prb part" x="145" y="113" width="35" height="72" fill="#26231F"/>'+
-    '<rect class="p-bar part" x="95" y="130" width="50" height="20" fill="#26231F"/>'+
-    '<circle class="p-ring" cx="120" cy="140" r="18" fill="none" stroke="#2540D0" stroke-width="8"/>'+
-    '</svg>';
-  var m=intro.querySelector('.fhi-mark'); if(m) m.innerHTML=svg;
-  htmlEl.style.overflow='hidden'; bodyEl.style.overflow='hidden';
-  var timers=[]; function at(ms,fn){timers.push(setTimeout(fn,ms));}
-  void intro.offsetWidth;
-  intro.classList.add('fhi-play');
-  at(3550,function(){intro.classList.add('fhi-built');});
-  at(4150,function(){intro.classList.add('fhi-charging');});
-  at(5650,function(){intro.classList.remove('fhi-charging');intro.classList.add('fhi-diving');});
-  at(6750,finish);
-  var sk=intro.querySelector('.fhi-skip');
-  if(sk) sk.addEventListener('click',function(){timers.forEach(clearTimeout);finish();});
-})();
-</script>
+
 </body>
 </html>

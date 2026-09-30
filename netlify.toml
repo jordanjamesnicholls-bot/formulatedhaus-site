@@ -1,0 +1,3 @@
+[build]
+  command = "node scripts/build.mjs --register-native-form"
+  publish = "dist"
